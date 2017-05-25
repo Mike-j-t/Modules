@@ -34,7 +34,9 @@ public class ModuleShowCase extends AppCompatActivity {
         // Example Use of Emsg an Extended message handling class
         // see ShowCase method below
         ShowCaseEmsg();
-        // Example use of DBColumn, DBTable and DBDatabase
+        // Example use of DBColumn, DBTable and DBDatabase for
+        // defining SQlite databases and subsequently altering
+        // them. see ShowCaseDBCLasses method below
         ShowCaseDBClasses();
     }
     @Override
