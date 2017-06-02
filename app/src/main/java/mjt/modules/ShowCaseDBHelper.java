@@ -5,12 +5,13 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 /**
- * Created by Mike on 24/05/2017.
+ * Minimal DBHelper i.e. doesn't create tables
  */
 
+@SuppressWarnings({"WeakerAccess", "UnusedParameters"})
 public class ShowCaseDBHelper extends SQLiteOpenHelper {
 
-    ShowCaseDBHelper(Context context, String databasename, SQLiteDatabase.CursorFactory factory, int version) {
+    ShowCaseDBHelper(Context context, @SuppressWarnings("SameParameterValue") String databasename, @SuppressWarnings("SameParameterValue") SQLiteDatabase.CursorFactory factory, @SuppressWarnings("SameParameterValue") int version) {
         super(context, databasename, factory, version);
 
     }
@@ -23,7 +24,11 @@ public class ShowCaseDBHelper extends SQLiteOpenHelper {
 
     }
 
-    void expandDB(SQLiteDatabase db, boolean buildandexpand) {
+    @SuppressWarnings("EmptyMethod")
+    /*
+      This could be where the table creation modifcation takes place
+     */
+    void expandDB(SQLiteDatabase db, @SuppressWarnings("SameParameterValue") boolean buildandexpand) {
 
     }
 

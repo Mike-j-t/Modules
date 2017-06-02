@@ -1,25 +1,18 @@
 package mjt.modules;
 
+import android.content.ContentValues;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
-import mjt.dbcolumn.DBColumn;
 import mjt.dbdatabase.DBDatabase;
-import mjt.dbtable.DBTable;
 import mjt.emsg.Emsg;
+import static mjt.sqlwords.SQLKWORD.*;
 
-import static mjt.dbcolumn.DBColumn.DB_NUMERIC;
-import static mjt.dbcolumn.DBColumn.DB_STD_ID;
-
-import static mjt.dbcolumn.DBColumn.DB_IDTYPE;
-import static mjt.dbcolumn.DBColumn.DB_TXT;
-
-import static mjt.modules.DBInfo.*;
 
 /******************************************************************************
  * ModuleShowCase Activity to show use of the modules
@@ -39,6 +32,7 @@ public class ModuleShowCase extends AppCompatActivity {
         // them. see ShowCaseDBCLasses method below
         ShowCaseDBClasses();
     }
+    @SuppressWarnings("EmptyMethod")
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -70,7 +64,7 @@ public class ModuleShowCase extends AppCompatActivity {
         errormsg1.setAll(true,98,"Ouch that hurt!");
         logEmsg(errormsg1);
 
-        // See logEmsg method for data retrieval methods (getters)
+        // See logEmsg method below for data retrieval methods (getters)
 
     }
 
@@ -78,7 +72,6 @@ public class ModuleShowCase extends AppCompatActivity {
      * Write error message data to the log
      * @param emsg  The Emsg object
      */
-    @SuppressWarnings("DanglingJavadoc")
     private void logEmsg(Emsg emsg) {
         Log.i("EMSG",
                 " Error State=" +
@@ -89,7 +82,7 @@ public class ModuleShowCase extends AppCompatActivity {
                         emsg.getErrorMessage()
         );
 
-        /** EXAMPLE LOG OUTPUT
+        /* EXAMPLE LOG OUTPUT
          I/EMSG:  Error State=true Error Number=0 Error Message=
          I/EMSG:  Error State=true Error Number=100 Error Message=This did not work.
          I/EMSG:  Error State=true Error Number=99 Error Message=This went wrong
@@ -119,178 +112,153 @@ public class ModuleShowCase extends AppCompatActivity {
      */
     private void ShowCaseDBClasses() {
 
-        // Define the instances to create a Database with two simple
-        // tables (users and properties)
-        // Note names are defined in the DBINFO class
+        final String OKLOGTAG = "ShowCaseOK";
+        final String ERRLOGTAG = "ShowCaseERR";
+        final String DB2LOGTAG = "ShowCaseCPYDB";
 
-        // Construct a DBCOlumn object using the most comprehensive
-        // and recommended constructor.
-        //
-        // Note as this column is a primary index (id column) DB_STD_ID
-        // is used for the column name and DB_IDTYPE for the column type.
-        //
-        // Defined column types are DB_INT, DB_TXT, DB_IDTYPE, DB_REAL,
-        // DB_NUMERIC and DB_BLOB.
-        // DB_ID_TYPE is and alias for DB_INT
-        DBColumn userid = new DBColumn(
-                DB_STD_ID,      // Column Name as String
-                DB_IDTYPE,      // Column type
-                true,           // Is it a Primary Index column, false if not
-                "",             // Default value, empty = no default applied
-                0               // Order of the column within the table
+        // Create or get the Database as per usual via a DBHelper
+        ShowCaseDBHelper schelper = new ShowCaseDBHelper(this,
+                ShowCaseDBInfo.DBNAME,null,
+                ShowCaseDBInfo.DBVERSION
         );
-        // Note DBInfo.DBUSER_ID_COLUMNNAME should really have been used.
-        // This though, refers to DB_STD_ID.
+        // Open the database
+        SQLiteDatabase db = schelper.getWritableDatabase();
 
-        // Username is Text Column not part of the primary index
-        DBColumn username = new DBColumn(
-                DBInfo.DBUSER_NAME_COLUMNNAME,
-                DB_TXT,
-                false,
-                "",
-                1
-        );
-        // User info is a Text Column not part of the primary index
-        DBColumn userinfo = new DBColumn(
-                DBInfo.DBUSER_INFO_COLUMNNAME,
-                DB_TXT,
-                false,
-                "",
-                2
-        );
-        // Create an Array List of the columns for use when defining the table
-        ArrayList<DBColumn> usercolumns = new ArrayList<>(
-                Arrays.asList(
-                        userid,
-                        username,
-                        userinfo
-                )
-        );
-        // define the User Table applying the columns above
-        DBTable usertable = new DBTable(
-                DBUSER_TABELNAME,   // Table name as a string
-                usercolumns         // ArrayList of DBCOlumns
-        );
+        if (ShowCaseDBInfo.pseudodbschema.isDBDatabaseUsable()) {
 
-        // Define th columns for the Property table
-        DBColumn propertyid = new DBColumn(
-                DBPROPERTY_ID_COLUMNNAME,   // Note refers to DB_STD_ID
-                DB_IDTYPE,
-                true,
-                "",
-                0
-        );
-        DBColumn propertydescription = new DBColumn(
-                DBPROPERTY_DESC_COLUMNNAME,
-                DB_TXT,
-                false,
-                "",
-                1
+            // Likewise look at the SQL that is generated for the build
+            // of the database.
+            // However, an ArrayList is returned with n SQL statements
+            // Again wouldn't normally do this.
+            ArrayList<String> buildSQL =
+                    ShowCaseDBInfo.pseudodbschema.generateDBBuildSQL(db);
+            for (String sql : buildSQL) {
+                Log.d(OKLOGTAG, sql);
+            }
+
+            // THIS IS IT BUILD the actual database
+            // Note runs all statements in a transaction
+            ShowCaseDBInfo.pseudodbschema.actionDBBuildSQL(db);
+
+            // DBdatabase pseudoschema is OK so look at the extracted
+            // pseudo Schema
+            // (wouldn't normally do this)
+            Log.d(OKLOGTAG,
+                    ShowCaseDBInfo.pseudodbschema.generateExportSchemaSQL());
+
+            // Now we have a database have a look at the Alter SQL (should be nothing to do)
+            Log.d(OKLOGTAG,"Pre AlterSQL");
+            ArrayList<String> altersql =
+                    ShowCaseDBInfo.pseudodbschema.generateDBAlterSQL(db);
+            for (String sql : altersql) {
+                Log.d(OKLOGTAG,
+                        sql
                 );
-
-        // Define the Property table using the Property Columns
-        DBTable propertytable = new DBTable(
-                DBPROPERTY_TABLENAME,
-                new ArrayList<>(Arrays.asList(
-                        propertyid,
-                        propertydescription
-                ))
-        );
-
-        // Define the Database psuedo schema
-        DBDatabase psuedoscehma = new DBDatabase(
-                DBNAME,
-                new ArrayList<DBTable>(Arrays.asList(
-                        usertable,
-                        propertytable
-                ))
-        );
-
-        // Check to see if the psuedoschema is useable if not Log the messages
-        // otherwise extract the SQL to build the tables.
-
-        if (!psuedoscehma.isDBDatabaseUsable()) {
-            Log.e("DBTEST",psuedoscehma.getAllDBDatabaseProblemMsgs());
-
+            }
+            Log.d(OKLOGTAG,
+                    "Post AlterSQL"
+            );
         } else {
-            // To build the SQL for Create we need to have the Database so
-            // create the empty (or get the existing one if it exists)
-            ShowCaseDBHelper scdbhelper = new ShowCaseDBHelper(this,DBNAME,null,DBVERSION);
-
-            // We need the database itself so get a readable
-            SQLiteDatabase scdb = scdbhelper.getWritableDatabase();
-
-            // Get the pre-create alterSQL (wouldn't normally do this)
-            ArrayList<String> precrtaltSQL = psuedoscehma.generateDBAlterSQL(scdb);
-
-            // Get the SQL to create the Tables
-            ArrayList<String> createSQL = psuedoscehma.generateDBBuildSQL(scdb);
-
-            // Get the SQL to alter any tables after comparing against the
-            // actual database and  the psuedo schema
-            ArrayList<String> alterSQL = psuedoscehma.generateDBAlterSQL(scdb);
-
-            // Write the table create SQL to the log
-            for (String sql : createSQL) {
-                Log.i("DBTEST-CRTSQL",sql);
-            }
-
-            // Write the Alter SQL to the log
-            // Note! There will be no elements as there is nothing to alter
-            //  more specififcally alter only looks at adding columns
-            // that don't exist in a table, so if a table doesn't exist
-            // then it cannot be altered
-            for (String sql : alterSQL) {
-                Log.i("DBTEST-ALTSQL", sql);
-            }
-
-            // Actually build the database
-            // i.e. create the tables and columns
-            psuedoscehma.actionDBBuildSQL(scdb);
-            // Like wise apply any alterations (none)
-            psuedoscehma.actionDBAlterSQL(scdb);
-
-
-            // NOTE! The following would not normally be done in this way
-            // This is bacuse you would normally alter the definitions
-            // prior to this.
-
-            // Define a new column
-            DBColumn newcolumn = new DBColumn("MYnewColumn",DB_NUMERIC,false,"21",4);
-            // Add the column to the property table (uses singluar add method)
-            propertytable.AddDBColumnToDBTable(newcolumn);
-
-            // Generate an exportable schema (works with MySQL)
-            // Introduces a new method that should work with MYSQL
-            String newschema =  psuedoscehma.generateExportSchemaSQL();
-            Log.i("DBTEST-NEWSCHM", newschema);
-
-            // Report Any problems with the updated schema
-            // yet another method not previously used
-            Log.i("DBTEST-USE",psuedoscehma.getDBDatabaseProblemMsg());
-
-            // Build SQL would be this (would not be applied as tables exist)
-            // Nothing to Log as nothing changed as far as build rather
-            // a new ccolumn needs to be applied via Alter SQL
-            ArrayList<String> newcolbldSQL = psuedoscehma.generateDBBuildSQL(scdb);
-            for (String sql : newcolbldSQL) {
-                Log.i("DBTEST-NEWCRT",sql);
-            }
-
-            // Alter SQL which will now exist
-            ArrayList<String> newcolalterSQL = psuedoscehma.generateDBAlterSQL(scdb);
-            for (String sql : newcolalterSQL) {
-                Log.i("DBTEST-NCALT",sql);
-            }
-
-            // Actually apply the alter Sql to add the new column
-            psuedoscehma.actionDBAlterSQL(scdb);
-
-            // The database should now be modified by the addition of the
-            // new column.
-
-            scdb.close();
-
+            Log.e(ERRLOGTAG,
+                    ShowCaseDBInfo.pseudodbschema.
+                            getAllDBDatabaseProblemMsgs());
         }
+
+        // As an example of not using an SQLiteOpenHelper
+        // not really something that would normally be done
+        SQLiteDatabase db2 = openOrCreateDatabase("myotherdatabase",
+                SQLiteDatabase.CREATE_IF_NECESSARY,
+                null
+        );
+        // Build the 2nd Database using the same pseudo schema
+        ShowCaseDBInfo.pseudodbschema.actionDBBuildSQL(db2);
+
+        // Show the tables and indexes of the first Database
+        Cursor dbcsr = db.query(SQLITEMASTERTABLE,null,null,null,null,null,null);
+        while (dbcsr.moveToNext()) {
+            Log.d(OKLOGTAG,
+                    "Type of Entry=" +
+                            dbcsr.getString(
+                                    dbcsr.getColumnIndex(
+                                            SQLITEMASTERCOLUMN_TYPE
+                                    )
+                            ) +
+                            "\tName of Entry=" +
+                            dbcsr.getString(
+                                    dbcsr.getColumnIndex(
+                                            SQLITEMASTERCOLUMN_NAME
+                                    )
+                            )
+            );
+        }
+        dbcsr.close();
+
+        // Show the tables and indexes of the 2nd Database
+        Cursor db2csr = db2.query(SQLITEMASTERTABLE,null,null,null,null,null,null);
+        while (db2csr.moveToNext()) {
+            Log.d(DB2LOGTAG,
+                    "Type of Entry=" +
+                            db2csr.getString(
+                                    db2csr.getColumnIndex(
+                                            SQLITEMASTERCOLUMN_TYPE
+                                    )
+                            ) +
+                            "\tName of Entry=" +
+                            db2csr.getString(
+                                    db2csr.getColumnIndex(
+                                            SQLITEMASTERCOLUMN_NAME
+                                    )
+                            )
+            );
+        }
+        if (!SCAnyData(db, ShowCaseDBInfo.pseudodbschema)) {
+            SCInsertAdminUser(db);
+            Log.d(OKLOGTAG,"Admin User Added");
+        }
+
+        db2csr.close();
+    }
+
+    /**************************************************************************
+     * Insert a default user named ADMIN but only if there are no other rows
+     * @param db    The SQLite database in which to insert the user
+     */
+    private void SCInsertAdminUser(SQLiteDatabase db) {
+        Cursor csr = db.query(ShowCaseDBInfo.USERS_TABLENAME,
+                null,null,null,null,null,null
+        );
+        if (csr.getCount() > 0) {
+            csr.close();
+            return;
+        }
+        csr.close();
+        ContentValues cv = new ContentValues();
+        cv.put(ShowCaseDBInfo.USERS_NAME_COLNAME,"ADMIN");
+        cv.put(ShowCaseDBInfo.USERS_INFO_COLNAME,"The admin user");
+        db.insert(ShowCaseDBInfo.USERS_TABLENAME,null,cv);
+    }
+
+    /**************************************************************************
+     * Find if there are any rows, thus data, in the database
+     * @param db        SQLite Database
+     * @param dbschema  DBDatabase schema to find all tables
+     * @return          true if there are any rows found, esle false
+     */
+    private boolean SCAnyData(SQLiteDatabase db, @SuppressWarnings("SameParameterValue") DBDatabase dbschema) {
+        boolean rv = false;
+        int rowcount = 0;
+        Cursor csr;
+        db.beginTransaction();
+        for (String table: dbschema.getTables()) {
+            csr = db.query(table,null,null,null,null,null,null);
+            rowcount = rowcount + csr.getCount();
+            csr.close();
+        }
+        db.setTransactionSuccessful();
+        db.endTransaction();
+        if (rowcount > 0) {
+            rv = true;
+        }
+        return rv;
     }
 }

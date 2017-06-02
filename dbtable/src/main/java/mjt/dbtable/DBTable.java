@@ -6,100 +6,142 @@ import android.database.sqlite.SQLiteDatabase;
 import java.util.ArrayList;
 
 import mjt.dbcolumn.DBColumn;
+import static mjt.sqlwords.SQLKWORD.*;
 
 /**
- * The type Db table.
+ * DBTable a component of the DB???? classes that represents a Table
+ * of a SQLite Database.
+ *
+ * <p>
+ *     A DBTable is one of a number of DB???? classes (DBDatabase, DBTable,
+ *     DBCColumn and DBIndex) designed for assisting with the creation
+ *     and alteration of SQLite Databases.
+ * </p>
+ *
+ * <p>
+ *     <b>DBTable dependencies on other DB???? classes/objects.</b>
+ * </p>
+ * <p>
+ *     A DBTable requires at least one DBColumn, a DBDatabase requires at
+ *     least one DBTable, A DBIndex requires one DBTable.
+ * </p>
+ *
+ *      <b>Usability.</b>
+ * </p>
+ * <p>
+ *     The construction of a DBTable instance includes checking that the
+ *     name is at least 1 character in length and that a usable  DBColumn
+ *     has been specified. If not then the DBtable will have it's usability
+ *     flag set to false. The usability flag is propogated to the
+ *     DBDatabase object.
+ * </p>
  */
-/*==================================================================================================
-//==================================================================================================
-// DBTable class - Database Table Class has table name and holds list of the columns in the table
-// Note!! Table name is converted to lowercase
-//
-// If default constructor used then the table will be flagged as unusable. It will require:-
-//        1) A table name via the setDBTable
-//        2) One or more columns via methods :-
-//            AddDBColumnToDBTable (adds a single column via a DBColumn object)
-//            AddDBColumnsToDBTable (adds multiple columns (1 or more) via an ArrayList of DBCOlumn
-//                Objects.
-//            AddMultipleColumnstoDBTable just a psuedonym for AddColumnsToDBTable, that is easier
-//                to differentiate between AddDBColumnToDBTAble and AddColumnsToDBTable (plural)
-//
-// If Intermediate Constructor used (sets the table name but not any columns). The table will be
-// flagged as unusable. However, the table name would be set (unless "" given as the table name).
-// Assuming the name is not "" then a column or columns will have to be added as per 2) above.
-// If "" given as name then 1) above would have to be applied.
-//
-// If HigherIntermediate Constructor (sets the table name and 1 column) then the table would be
-// usable. However 2) above would be required if further columns were needed.
-//
-// If Full constructor used then (sets table name and multiple columns as per and ArrayList of
-// DBColumn objects) table should be usable.
-// NOTE!!! In all cases the assumption is that all DBColumns applied are themselves usable. If any
-//         are not then the table will be flagged as unusable. Refer to DBColumns for their
-//         usability criteria.
-//==================================================================================================
-//================================================================================================*/
-@SuppressWarnings("WeakerAccess")
+@SuppressWarnings({"WeakerAccess","unused"})
 public class DBTable {
-    private boolean usable;                         //* Flag to denote if this object can be used
-    private String table_name;                      // The table name
-    private ArrayList<DBColumn> table_columns;      // The list of columns in the table
-    private String problem_msg;                     //* Holds error/warning message
-
-    //* signifies internally managed property
-
     /**
-     * Instantiates a new Db table.
+     * A boolean that indicates if the DBColumn is usable (true)
+     * or not (false).
      */
-//==============================================================================================
-    // Default DBTable Object Constructor
+    private boolean usable;
+    /**
+     * A String that will be the name of the table in the actual database.
+     *
+     * <p>The name will be converted to lowercase, it should not include any
+     * whitespace.
+     * </p>
+     */
+    private String table_name;
+    /**
+     * A String ArrayList of DBColumns that the table will be comprised of.
+     */
+    private ArrayList<DBColumn> table_columns;
+    /**
+     * An internally created string that will contain issues found
+     * when instantiating or modifying the DBTable.&nbsp;It would only be set
+     * if the usable flag is set to false.
+     */
+    private String problem_msg;
+
+    /**************************************************************************
+     * Constructs an unusable DBTable with problem message set.
+     *
+     * <p>To make the DBTable usable the DBtable will have to have to be
+     * provided with the table name via <code>setDBTableName</code> and
+     * additionally at least one DBColumn will have to be provided.
+     * </p>
+     * <p>
+     *     Methods <code>addDBColumntoDBTable</code>,
+     *     <code>addDBColumnsToDBTable</code>,
+     *     <code>addMultipleColumnsToDBTable</code> facilitate adding
+     *     DBColumns.
+     * </p>
+     */
     public DBTable() {
         this.usable = false;
         this.table_name = "";
         this.table_columns = new ArrayList<>();
-        this.problem_msg = "WDBT0004 - Uninstantiated - " +
+        this.problem_msg = "\nWDBT0004 - Uninstantiated - " +
                 "Use addDBColumnToDBTable to add at least 1 usable DBColumn or " +
                 "Use addDBColumnsToDBTable to add at least 1 usable DBColumn or " +
-                "Use AddMultipleColumnstoDBTable to add at least 1 usable DBColumn. " +
+                "Use AddMultipleColumnsToDBTable to add at least 1 usable DBColumn. " +
                 "Note any unusable DBcolumn will render table unusable. " +
                 "Also use setDBTableTableName to set the Table Name. " +
                 "Caller=DBTable (Default Constructor)";
     }
 
     /**
-     * Instantiates a new Db table.
+     * * Constructs a DBTable with only the table name, the resultant
+     * DBTable will be flagged as unusable as no DBCOlumns have been
+     * assigned.
      *
-     * @param table_name the table name
+     * <p>
+     *     Methods <code>addDBColumntoDBTable</code>,
+     *     <code>addDBColumnsToDBTable</code>,
+     *     <code>addMultipleColumnsToDBTable</code> facilitate adding
+     *     DBColumns.
+     * </p>
+     *
+     * @param table_name    The name, as a String, adhering to SQLIte
+     *                      naming conventions.
      */
-//==============================================================================================
-    // Intermediate DBTable Object Constructor - Just the table name
-    @SuppressWarnings("unused")
     public DBTable(String table_name) {
         this.usable = false;
         this.table_name = table_name.toLowerCase();
         this.table_columns = new ArrayList<>();
-        this.problem_msg = "WDBT0005 - Partially Instantiated - " +
-                "Use addDBColumnToDBTable to add at least 1 usable DBColumns or " +
-                "Use addDBColumnsToDBTable to add at least 1 usable DBColumn or " +
-                "Use AddMultipleColumnstoDBTable to add at least 1 usable DBColumn. " +
+        this.problem_msg = "\nWDBT0005 - Partially Instantiated - " +
+                "Use addDBColumnToDBTable to add at least 1" +
+                " usable DBColumns or " +
+                "Use addDBColumnsToDBTable to add at least 1" +
+                " usable DBColumn or " +
+                "Use AddMultipleColumnsToDBTable to add at least 1" +
+                " usable DBColumn. " +
                 "Note any unusable DBColumn will render table unusable. " +
                 "Caller=DBTable (Table Name only Constructor)";
         if(table_name.length() < 1) {
-            this.problem_msg = this.problem_msg + "WDTB0006 - " +
-                    "Invalid Table Name - Must be at least 1 character in length. " +
+            this.problem_msg = this.problem_msg + "\nWDTB0006 - " +
+                    "Invalid Table Name - Must be at least 1 " +
+                    "character in length. " +
                     "Caller=(DBTable (table_name))";
         }
     }
 
-    /**
-     * Instantiates a new Db table.
+    /**************************************************************************
+     * Constructs a DBTable with a single DBColumn
      *
-     * @param table_name   the table name
-     * @param table_column the table column
+     * <p>
+     *     Methods <code>addDBColumntoDBTable</code>,
+     *     <code>addDBColumnsToDBTable</code>,
+     *     <code>addMultipleColumnsToDBTable</code> facilitate adding
+     *     DBColumns.
+     * </p>
+     *
+     * @param table_name    The name, as a String, adhering to SQLIte
+     *                      naming conventions.
+     * @param table_column  The DBColumn to be assigned to the table and thus
+     *                      to be the only column of the table; unless
+     *                      more DBColumns are subsequently added.
+     *
      */
-//==============================================================================================
-    // HigherIntermediate DBTable Object Constructor - Table with 1 column
-    @SuppressWarnings("unused")
     public DBTable(String table_name, DBColumn table_column) {
         this();
         this.table_name = table_name;
@@ -108,14 +150,14 @@ public class DBTable {
         this.checkDBTableIsUsable("DBTable (table_name, table_column (singular))");
     }
 
-    /**
-     * Instantiates a new Db table.
+    /**************************************************************************
+     * Constructs a DBTable with one or more DBCOLumns.
      *
-     * @param table_name    the table name
-     * @param table_columns the table columns
+     * @param table_name    The name, as a String, adhering to SQLIte
+     *                      naming conventions.
+     * @param table_columns A DBColumn ArrayList for the columns to be
+     *                      assigned to the table.
      */
-//==============================================================================================
-    // Full DBTable Object Constructor
     public DBTable(String table_name, ArrayList<DBColumn> table_columns) {
         this();
         this.problem_msg = "";
@@ -124,112 +166,98 @@ public class DBTable {
         this.checkDBTableIsUsable("DBTable Full Constructor");
     }
 
-    /**
-     * Add db column to db table.
+    /**************************************************************************
+     * Adds a DBColumn to the DBTable.
      *
-     * @param dbcolumn the dbcolumn
+     * @param dbcolumn  The DBColumn to add to the DBTable.
      */
-//==============================================================================================
-    // Add a DBCOlumn Object to the table
-    @SuppressWarnings("unused")
     public void AddDBColumnToDBTable(DBColumn dbcolumn) {
         this.table_columns.add(dbcolumn);
         this.problem_msg = "";
         this.checkDBTableIsUsable("AddDBColumnToDBTable");
     }
 
-    /**
-     * Add db columnsto db table.
+    /**************************************************************************
+     * Adds  multiple DBColumns to the DBTable.
      *
-     * @param dbcolumns the dbcolumns
+     * @param dbcolumns The DBColumn ArrayList containing the DBCOlumns to be
+     *                  added to the DBTable.
      */
-//==============================================================================================
-    // Add a list of DBCOlumn Objects, as held in a DBColumn ArrayList, to the table
-    public void AddDBColumnstoDBTable(ArrayList<DBColumn> dbcolumns) {
+    public void AddDBColumnsToDBTable(ArrayList<DBColumn> dbcolumns) {
         this.table_columns.addAll(dbcolumns);
         this.problem_msg = "";
         this.checkDBTableIsUsable("AddDBColumnsToDBtable");
     }
 
-    /**
-     * Add multiple columnsto db table.
+    /**************************************************************************
+     * Add multiple DBColumns to the DBTable
+     * (psuedonym for AddDBColumnsToDBTable).
      *
-     * @param dbcolumns the dbcolumns
+     * @param dbcolumns The DBColumn ArrayList containing the DBCOlumns to be
+     *                  added to the DBTable.
      */
-//==============================================================================================
-    // psuedonym for AddDBColumnsToDBTable (easier to differentiate from AddDBColumnToDBTable)
-    @SuppressWarnings("unused")
-    public void AddMultipleColumnstoDBTable(ArrayList<DBColumn> dbcolumns) {
-        this.AddDBColumnstoDBTable(dbcolumns);
+    public void AddMultipleColumnsToDBTable(ArrayList<DBColumn> dbcolumns) {
+        this.AddDBColumnsToDBTable(dbcolumns);
     }
 
-    /**
-     * Sets db table name.
+    /**************************************************************************
+     * Sets the DBTable's table name.
      *
-     * @param table_name the table name
+     * @param table_name The name, as a String, adhering to SQLIte
+     *                      naming conventions.
      */
-//==============================================================================================
-    // Set the name of the table.
-    // Note table name will be converetd to lowercase.
-    // The table usability will be rechecked.
-    @SuppressWarnings("unused")
     public void setDBTableName(String table_name) {
         this.table_name = table_name.toLowerCase();
         this.problem_msg = "";
         this.checkDBTableIsUsable("setDBTableName");
     }
 
-    /**
-     * Gets db table name.
+    /**************************************************************************
+     * Gets the DBTable's table name.
      *
-     * @return the db table name
+     * @return The table name as a String.
      */
-// Retrieve the DBTable's name
-    //==============================================================================================
     public String getDBTableName() { return this.table_name; }
 
-    /**
-     * Is db table usable boolean.
+    /**************************************************************************
+     * Gets the usability status of the DBTable.
      *
-     * @return the boolean
+     * @return The usability status, as a boolean, true indicates that
+     * the DBTable is usable, false that it is not.
      */
-//==============================================================================================
     public boolean isDBTableUsable() { return this.usable; }
 
-    /**
-     * Number of columns in table int.
+    /**************************************************************************
+     * Gets the number of DBColumns currently assigned to the DBTable.
      *
-     * @return the int
+     * @return The number of DBColumns in the DBTables table_columns
+     * DBColumns ArrayList.
      */
-    @SuppressWarnings("unused")
     public int numberOfColumnsInTable() { return this.table_columns.size(); }
 
-    /**
-     * Gets table db columns.
+    /**************************************************************************
+     * Gets the DBColumns assigned to the DBTable.
      *
-     * @return the table db columns
+     * @return The DBTable's DBColumn ArrayList.
      */
-//Retrieve the DBTable's DBColumn list as and ArrayList of DBCOlumn objects
-    //==============================================================================================
-    public ArrayList<DBColumn> getTableDBColumns() { return this.table_columns; }
+    public ArrayList<DBColumn> getTableDBColumns() {
+        return this.table_columns;
+    }
 
-    /**
-     * Gets db table problem msg.
+    /**************************************************************************
+     * Gets the DBTables problem msg.
      *
-     * @return the db table problem msg
+     * @return The DBTable's problem msg as a String
      */
-// Retrieve the DBTable's Problem Message
-    //==============================================================================================
     public String getDBTableProblemMsg() { return this.problem_msg; }
 
-    /**
-     * Gets all db table problem msgs.
+    /**************************************************************************
+     * Gets the DBTable's problem message along with the underlying
+     * problem messages from the DBColumns assigned to the DBTable.
      *
-     * @return the all db table problem msgs
+     * @return A string with all of the problem messages fron the DBTable and
+     * the DBColumns assigned to the DBTable.
      */
-//==============================================================================================
-    // Retrieve the DBTable's Problem Message along with all the Problem Messages for the
-    // DBColumns in the DBTable
     public String getAllDBTableProblemMsgs() {
         String problem_messages = this.getDBTableProblemMsg();
         for(DBColumn tc : this.table_columns) {
@@ -238,21 +266,23 @@ public class DBTable {
         return  problem_messages;
     }
 
-    /**
-     * Check db table is usable boolean.
+    /**************************************************************************
+     * Check the DBTable's usability status of the DBTable including  calling
+     * <code>anyEmptyDBColumnsInDBTable</code>, which checks for no DBColumns
+     * and also for the usability status of existing DBColumns.
      *
-     * @param caller the caller
-     * @return the boolean
+     * @param caller The label of the invoking routine, to assist in locating
+     *               any issues.
+     * @return  the usability status (expected to often not be used).
      */
-//==============================================================================================
-    // Check if the DBTable is usable, setting usability state. Includes underlying DBColumns
     @SuppressWarnings("UnusedReturnValue")
     public boolean checkDBTableIsUsable(String caller) {
         this.usable = false;
         if(this.anyEmptyDBColumnsInDBTable(caller)) {
             this.usable = true;
             if (this.table_name.length() < 1) {
-                this.problem_msg = this.problem_msg + " EDBT0009 - Inavlid Table Name - " +
+                this.problem_msg = this.problem_msg +
+                        "\nEDBT0009 - Inavlid Table Name - " +
                         "Must be at least 1 character in length. " +
                         "Caller=(" + caller + ")";
                 this.usable = false;
@@ -261,55 +291,72 @@ public class DBTable {
         return this.usable;
     }
 
-    /**
-     * Any empty db columns in db table boolean.
+    /**************************************************************************
+     * Checks for no DBColumns being assigned to the DBTable and also for
+     * any DBColumns that sre unusable.
      *
-     * @param caller the caller
-     * @return the boolean
+     * @param caller The label of the invoking routine, to assist in locating
+     *               any issues.
+     * @return the usability status of the DBTable.
      */
-//==============================================================================================
-    // Check to see if the DBtable has 0 DBColumns. If not then checks the DBColumns for usability.
-    // Note!! does not reset DBColumn usability, rather this is the DBTable's view of the DBColumns
-    // usability.
     public boolean anyEmptyDBColumnsInDBTable(String caller) {
-        boolean rc = true;
+        boolean rv = true;
         if(this.table_columns.isEmpty()) {
-            this.problem_msg = this.problem_msg + "EDBT0007 - No Columns - " +
+            this.problem_msg = this.problem_msg + "\nEDBT0007 - No Columns - " +
                     "Must have at least 1 Column in the Table. " +
                     "Caller=(" + caller + ")";
             this.usable = false;
             return false;
         }
         for(DBColumn tc : this.table_columns) {
+            // Set the DBColumn's Fully Qualified Name i.e. table.column
+            tc.setFullyQualifiedColumnName(this.table_name);
             if(!tc.isDBColumnUsable()) {
-                this.problem_msg = this.problem_msg + "EDBT0008 - Column " + tc.getDBColumnName() +
+                this.problem_msg = this.problem_msg + "\nEDBT0008 - Column " + tc.getDBColumnName() +
                         " is unusable. Must be usable. " +
                         "Caller=(" + caller + ")";
-                rc = false;
+                rv = false;
             }
         }
-        return rc;
+        return rv;
     }
 
-    /**
-     * Gets sql create string.
+    /**************************************************************************
+     * Gets the DBTable's SQL creation statement but only if the SQLite
+     * database table doesn't exist (not overly important as SQL statements
+     * are in the form CREATE TABLE IF NOT EXISTS).
      *
-     * @param db the db
-     * @return the sql create string
+     * @param db The SQLite database to inspect.
+     * @return the sql create string, empty String if the SQLite database
+     * contains the table.
      */
-//==============================================================================================
     public String getSQLCreateString(SQLiteDatabase db) {
 
         // Check to see if this table exists, if not then skip CREATE
-        String sqlstr_mstr = "SELECT name FROM sqlite_master WHERE type = 'table' AND name!='android_metadata' ORDER by name;";
-        Cursor csr_mstr = db.rawQuery(sqlstr_mstr,null);
+        String where = SQLITEMASTERCOLUMN_TYPE +
+                "=? " +
+                SQLAND +
+                SQLITEMASTERCOLUMN_NAME +
+                "!=?";
+        String[] whereargs = {"table",SQLITEMASTERNAME_METADATA};
+        Cursor csr_mstr = db.query(SQLITEMASTERTABLE,
+                new String[]{SQLITEMASTERCOLUMN_NAME},
+                where,
+                whereargs,
+                null,
+                null,
+                SQLITEMASTERCOLUMN_NAME
+        );
         boolean table_exists = false;
 
         while(csr_mstr.moveToNext()) {
-            if(this.table_name.equals(csr_mstr.getString(0))) { table_exists = true; }
+            if(this.table_name.equals(csr_mstr.getString(0))) {
+                table_exists = true;
+            }
         }
         // Finished with master
         csr_mstr.close();
+        // if the table exists then provide no SQL (changes should be done via Alter)
         if(table_exists) {
             return "";
         }
@@ -323,18 +370,24 @@ public class DBTable {
             }
         }
         // Build the CREATE SQL
-        String part1 = " CREATE  TABLE IF NOT EXISTS " + this.table_name + " (";
+        String part1 = SQLCREATE +
+                SQLTABLE +
+                SQLIFNOTEXISTS +
+                this.table_name +
+                " (";
         int dccount = 0;
         // Main Loop through the columns
         for(DBColumn dc : this.table_columns) {
             part1 = part1 + dc.getDBColumnName() + " " + dc.getDBColumnType() + " ";
             // Apply the default value if required
             if(dc.getDBColumnDefaultValue().length() > 0 ) {
-                part1 = part1 + " DEFAULT " + dc.getDBColumnDefaultValue() + " ";
+                part1 = part1 +
+                        SQLDEFAULT +
+                        dc.getDBColumnDefaultValue() + " ";
             }
             // if only 1 PRIMARY INDEX and this is it then add it
             if(dc.getDBColumnIsPrimaryIndex() & indexes.size() == 1) {
-                part1 = part1 + " PRIMARY KEY ";
+                part1 = part1 + SQLPRIMARYKEY;
             }
             // If more to do then include comma separator
             dccount++;
@@ -345,7 +398,7 @@ public class DBTable {
         // Handle multiple PRIMARY INDEXES ie add PRIMARY KEY (<col>, <col> .....)
         int ixcount = 1;
         if(indexes.size() > 1 ) {
-            part1 = part1 + ", PRIMARY KEY (";
+            part1 = part1 + SQLPRIMARYKEYSTART;
             for(String ix : indexes) {
                 part1 = part1 + ix;
                 if(ixcount < (indexes.size() ) ) {
@@ -353,19 +406,20 @@ public class DBTable {
                 }
                 ixcount++;
             }
-            part1 = part1 + ")";
+            part1 = part1 + SQLPRIMARYKEYEND;
         }
         part1 = part1 + ") ;";
         return part1;
     }
 
-    /**
-     * Gets sql table create as string.
+    /**************************************************************************
+     * Gets SQL table create as string, this used for export rather than
+     * internal use; hence no usability checking.
      *
-     * @param doasmysql the doasmysql
+     * @param doasmysql flag, if true indicates that the generated SQL is for
+     *                  use by MYSQL (and perhaps other DBM's)
      * @return the sql table create as string
      */
-//==============================================================================================
     public String getSQLTableCreateAsString(@SuppressWarnings("SameParameterValue") Boolean doasmysql) {
 
         // Extract Columns that are flagged as PRIMARY INDEXES so we have a count
@@ -377,12 +431,17 @@ public class DBTable {
             }
         }
         // Build the CREATE SQL
-        String part1 = " CREATE  TABLE IF NOT EXISTS `" + this.table_name + "` (";
+        String part1 = SQLCREATE +
+                SQLTABLE +
+                SQLIFNOTEXISTS +
+                "'" +
+                this.table_name +
+                "' (";
         int dccount = 0;
         // Main Loop through the columns
         for(DBColumn dc : this.table_columns) {
             // FOR mysql export need to use BIGINT(20) instead of INTEGER
-            if(doasmysql && dc.getDBColumnType().equals("INTEGER")) {
+            if(doasmysql && dc.getDBColumnType().equals(SQLINTEGER)) {
                 part1 = part1 + "`" + dc.getDBColumnName() + "` BIGINT(20) NOT NULL ";
             } else {
                 part1 = part1 + "`" + dc.getDBColumnName() + "` " + dc.getDBColumnType() + " ";
@@ -390,11 +449,11 @@ public class DBTable {
 
             // Apply the default value if required
             if(dc.getDBColumnDefaultValue().length() > 0 ) {
-                part1 = part1 + " DEFAULT " + dc.getDBColumnDefaultValue() + " ";
+                part1 = part1 + SQLDEFAULT + dc.getDBColumnDefaultValue() + " ";
             }
             // if only 1 PRIMARY INDEX and this is it then add it
             if(dc.getDBColumnIsPrimaryIndex() & indexes.size() == 1) {
-                part1 = part1 + " PRIMARY KEY ";
+                part1 = part1 + SQLPRIMARYKEY;
             }
             // If more to do then include comma separator
             dccount++;
@@ -405,7 +464,7 @@ public class DBTable {
         // Handle multiple PRIMARY INDEXES ie add PRIMARY KEY (<col>, <col> .....)
         int ixcount = 1;
         if(indexes.size() > 1 ) {
-            part1 = part1 + ", PRIMARY KEY (";
+            part1 = part1 + SQLPRIMARYKEYSTART;
             for(String ix : indexes) {
                 part1 = part1 + ix;
                 if(ixcount < (indexes.size() ) ) {
@@ -413,65 +472,92 @@ public class DBTable {
                 }
                 ixcount++;
             }
-            part1 = part1 + ")";
+            part1 = part1 + SQLPRIMARYKEYEND;
         }
         part1 = part1 + ") ;";
         return part1;
     }
 
-    /**
-     * Gets sql alter to add new columns.
+    /**************************************************************************
+     * Gets SQL alter statements to add new columns to the SQLite table.
      *
-     * @param db the db
-     * @return the sql alter to add new columns
+     * <p>
+     *     Note that this uses the SQLITE PRAGMA to get the table's column
+     *     information and then it
+     * </p>
+     *
+     * @param db The SQLite database to inspect.
+     * @return the SQL statements to add new columns as a String ArrayList,
+     * there could be no elements.
      */
-//==============================================================================================
     public ArrayList<String> getSQLAlterToAddNewColumns(SQLiteDatabase db) {
         // Have to return an array (arraylist) as ALTER statements can only Add 1 column at a time.
         ArrayList<String> result = new ArrayList<>();
 
-        // Prepare to get the current database table information PRAGMA
+        // Prepare to get the current database table information
+        // i.e columns in the table via PRAGMA.
         String sqlstr = " PRAGMA table_info (" + this.table_name + ")";
         Cursor csr = db.rawQuery(sqlstr, null);
 
         // Check to see if this table exists, if not then cannot ALTER anything
-        // Should never happen if the method actionDBAlterSQL (method that invokes this method)
-        // is preceeded by actionDBCreateSQL, as that should create any tables that don't exist.
-        String sqlstr_mstr = "SELECT name FROM sqlite_master WHERE type = 'table' AND name!='android_metadata' ORDER by name;";
-        Cursor csr_mstr = db.rawQuery(sqlstr_mstr,null);
+        // Should never happen if the method actionDBAlterSQL (method that
+        // invokes this method) is preceeded by actionDBBuildSQL, as that
+        // should create any tables that don't exist.
+        String where = SQLITEMASTERCOLUMN_TYPE +
+                "=?" +
+                SQLAND +
+                SQLITEMASTERCOLUMN_NAME +
+                "!=?";
+        String[] whereargs = {SQLITEMASTERTYPE_TABLE,
+                SQLITEMASTERNAME_METADATA};
+
+        //String sqlstr_mstr = "SELECT name FROM sqlite_master WHERE type = 'table' AND name!='android_metadata' ORDER by name;";
+        //Cursor csr_mstr = db.rawQuery(sqlstr_mstr,null);
+        Cursor csr_mstr = db.query(SQLITEMASTERTABLE,
+                new String[]{SQLITEMASTERCOLUMN_NAME},
+                where,
+                whereargs,null,null,SQLITEMASTERCOLUMN_NAME);
         boolean table_exists = false;
 
         while(csr_mstr.moveToNext()) {
-            String cmix0 = csr_mstr.getString(0);
             if(this.table_name.equals(csr_mstr.getString(0))) { table_exists = true; }
         }
         csr_mstr.close();
+        // If the table doesn't exist then return the empty String ArrayList.
         if(!table_exists) {
             csr.close();
             return result;
         }
 
-        // Loop through all the columns of the potentially new columns
+        // Tables does exist, so loop through all the DBColumns (the poitentiall
+        // new ccolumns)
         for(DBColumn dc : this.table_columns) {
             String columntofind = dc.getDBColumnName();
             boolean columnmatch = false;
 
+            // ensure that the cursor is positioned before the first row
             csr.moveToPosition(-1);
+            // Check to see if the current column exists, if it doesn then
+            // nothing will be done for this column.
             while(csr.moveToNext()) {
                 if(csr.getString(1).equals(columntofind)) {
                     columnmatch = true;
                 }
             }
 
+            // Column not found so create SQL alter statement to add the
+            // column to the table.
             if(!columnmatch) {
-                String altersql = " ALTER TABLE " + this.table_name + " ADD COLUMN " +
+                String altersql = SQLALTERTABLE +
+                        this.table_name +
+                        SQLADDCOLUMN +
                         dc.getDBColumnName() + " " +
                         dc.getDBColumnType() + " ";
                 if(dc.isDBColumnPrimaryIndex()) {
-                    altersql = altersql + " PRIMARY INDEX ";
+                    altersql = altersql + SQLPRIMARYINDEX;
                 }
                 if(dc.getDBColumnDefaultValue().length() > 0 ) {
-                    altersql = altersql + " DEFAULT " + dc.getDBColumnDefaultValue() + " ";
+                    altersql = altersql + SQLDEFAULT + dc.getDBColumnDefaultValue() + " ";
                 }
                 altersql = altersql + " ; ";
                 result.add(altersql);
