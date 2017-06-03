@@ -166,6 +166,61 @@ public class DBTable {
         this.checkDBTableIsUsable("DBTable Full Constructor");
     }
 
+    /**
+     * Look for duplicate column names, if found add to problem message
+     * and flag DBTable as unusable.
+     */
+    private void findDuplicateColumns() {
+        // no or 1 column cannot have duplicates so done
+        if (this.table_columns.size() < 2) {
+            return;
+        }
+        ArrayList<Integer> needlematches = new ArrayList<>();
+        ArrayList<Integer> haystackmatches = new ArrayList<>();
+        int i =0;
+        for (DBColumn needlecolumn : this.table_columns) {
+            int j = 0;
+            for (DBColumn haystackcolumn : this.table_columns) {
+                //Skip checking the column against itself
+                if (j == i) {
+                    j++;
+                    continue;
+                }
+
+                //Skip checking already matched columns
+                boolean alreadymatched = false;
+                for (int k = 0; k < needlematches.size(); k++) {
+                    if (i == haystackmatches.get(k) && j == needlematches.get(k) ) {
+                        alreadymatched = true;
+                    }
+                }
+                if (alreadymatched) {
+                    j++;
+                    continue;
+                }
+
+                if (needlecolumn.getDBColumnName().equals(
+                        haystackcolumn.getDBColumnName()
+                )) {
+                    needlematches.add(i);
+                    haystackmatches.add(j);
+                    this.problem_msg = this.problem_msg +
+                            "\nEDBT0015 - Duplicated Column - " +
+                            "Column=" + needlecolumn.getDBColumnName() +
+                            " col(" +
+                            Integer.toString(i) +
+                            ") is the same as " +
+                            "Column=" + haystackcolumn.getDBColumnName() +
+                            " col(" +
+                            Integer.toString(j) + ")";
+                    this.usable = false;
+                }
+                j++;
+            }
+            i++;
+        }
+    }
+
     /**************************************************************************
      * Adds a DBColumn to the DBTable.
      *
@@ -288,6 +343,7 @@ public class DBTable {
                 this.usable = false;
             }
         }
+        this.findDuplicateColumns();
         return this.usable;
     }
 

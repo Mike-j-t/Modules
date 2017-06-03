@@ -37,7 +37,46 @@ class ShowCaseDBInfo {
     The userpropertylink table will have two columns userref and propertyref.
     There wil be two indexes; one name username_index, the other named
     propertydesc_index
+
+    NOTE! The ShowCase writes messages to the log
+
+    The first run log would be similar to :-
+
+    06-04 09:06:57.319 4499-4499/mjt.modules D/ShowCaseOK:  CREATE  TABLE  IF NOT EXISTS users (_id INTEGER  PRIMARY KEY, name TEXT , info TEXT ) ;
+    06-04 09:06:57.319 4499-4499/mjt.modules D/ShowCaseOK:  CREATE  TABLE  IF NOT EXISTS property (_id INTEGER  PRIMARY KEY, descr TEXT ) ;
+    06-04 09:06:57.319 4499-4499/mjt.modules D/ShowCaseOK:  CREATE  TABLE  IF NOT EXISTS userpropertylink (userref INTEGER , propertyref INTEGER , PRIMARY KEY (userref, propertyref) ) ;
+    06-04 09:06:57.319 4499-4499/mjt.modules D/ShowCaseOK:  CREATE  INDEX  IF NOT EXISTS username_index ON users(name ASC )
+    06-04 09:06:57.319 4499-4499/mjt.modules D/ShowCaseOK:  CREATE  INDEX  IF NOT EXISTS propertydescr_index ON property(descr ASC )
+    06-04 09:06:57.324 4499-4499/mjt.modules D/ShowCaseOK: --CRTTB_START
+                                                            CREATE  TABLE  IF NOT EXISTS 'users' (`_id` BIGINT(20) NOT NULL  PRIMARY KEY, `name` TEXT , `info` TEXT ) ;
+                                                           --CRTTB_FINISH
+                                                           --CRTTB_START
+                                                            CREATE  TABLE  IF NOT EXISTS 'property' (`_id` BIGINT(20) NOT NULL  PRIMARY KEY, `descr` TEXT ) ;
+                                                           --CRTTB_FINISH
+                                                           --CRTTB_START
+                                                            CREATE  TABLE  IF NOT EXISTS 'userpropertylink' (`userref` BIGINT(20) NOT NULL , `propertyref` BIGINT(20) NOT NULL , PRIMARY KEY (userref, propertyref) ) ;
+                                                           --CRTTB_FINISH
+    06-04 09:06:57.324 4499-4499/mjt.modules D/ShowCaseOK: Pre AlterSQL
+    06-04 09:06:57.326 4499-4499/mjt.modules D/ShowCaseOK: Post AlterSQL
+    06-04 09:06:57.341 4499-4499/mjt.modules D/ShowCaseOK: Type of Entry=table	Name of Entry=android_metadata
+    06-04 09:06:57.341 4499-4499/mjt.modules D/ShowCaseOK: Type of Entry=table	Name of Entry=users
+    06-04 09:06:57.341 4499-4499/mjt.modules D/ShowCaseOK: Type of Entry=table	Name of Entry=property
+    06-04 09:06:57.341 4499-4499/mjt.modules D/ShowCaseOK: Type of Entry=table	Name of Entry=userpropertylink
+    06-04 09:06:57.341 4499-4499/mjt.modules D/ShowCaseOK: Type of Entry=index	Name of Entry=sqlite_autoindex_userpropertylink_1
+    06-04 09:06:57.341 4499-4499/mjt.modules D/ShowCaseOK: Type of Entry=index	Name of Entry=username_index
+    06-04 09:06:57.341 4499-4499/mjt.modules D/ShowCaseOK: Type of Entry=index	Name of Entry=propertydescr_index
+    06-04 09:06:57.341 4499-4499/mjt.modules D/ShowCaseCPYDB: Type of Entry=table	Name of Entry=android_metadata
+    06-04 09:06:57.341 4499-4499/mjt.modules D/ShowCaseCPYDB: Type of Entry=table	Name of Entry=users
+    06-04 09:06:57.341 4499-4499/mjt.modules D/ShowCaseCPYDB: Type of Entry=table	Name of Entry=property
+    06-04 09:06:57.341 4499-4499/mjt.modules D/ShowCaseCPYDB: Type of Entry=table	Name of Entry=userpropertylink
+    06-04 09:06:57.341 4499-4499/mjt.modules D/ShowCaseCPYDB: Type of Entry=index	Name of Entry=sqlite_autoindex_userpropertylink_1
+    06-04 09:06:57.341 4499-4499/mjt.modules D/ShowCaseCPYDB: Type of Entry=index	Name of Entry=username_index
+    06-04 09:06:57.341 4499-4499/mjt.modules D/ShowCaseCPYDB: Type of Entry=index	Name of Entry=propertydescr_index
+    06-04 09:06:57.348 4499-4499/mjt.modules D/ShowCaseOK: Admin User Added
+
+    The log from subsequent runs would be similar except that the very last line "Admin User Added" would not be present.
      */
+
     // Define the constants for the Database name and the version number
     //  note there is little, if any need, to ever alter the DB version
     public static final String DBNAME = "mydatabase";
@@ -73,6 +112,7 @@ class ShowCaseDBInfo {
     public static final DBColumn users_id = new DBColumn(true);
     public static final DBColumn users_name = new DBColumn(USERS_NAME_COLNAME,SQLTEXT,false,"");
     public static final DBColumn users_info = new DBColumn(USERS_INFO_COLNAME,SQLTEXT,false,"");
+    public static final DBColumn ooops = new DBColumn(USERS_INFO_COLNAME,SQLTEXT,false,"");
 
     // Define the DBColumns for the property table
     // Note will reuse of the stdid column for the _id
@@ -161,25 +201,28 @@ class ShowCaseDBInfo {
             ))
     );
 
-    // Define some other potentially useful constants to overcome ambiguities
+    /*
+        Define some other potentially useful constants to overcome
+        ambiguities.
 
-    // Fully qualified users _id column name
-    // Note does not use the getFullyQualifiedDBColumnName due to the stdid
-    // DBColumn being resused
+     */
+    // Fully qualified users _id column
     public static final String USERS_ID_FULLCOLNAME =
-            users.getDBTableName() +
-                    SQLPERIOD +
-                    users_id.getDBColumnName();
+            users_id.getFullyQualifiedDBColumnName();
     // Alternative users _id column name
-    //  For cases where fully qualified name cannot be used
-    //  e.g. Cursor adpaters
+    //  For cases where fully qualified name cannot be used but _id
+    //  would be ambiguous, so incorporate the tablename by prefixing
+    // the column name with the table name and an underscore.
+    // e.g. users__id
     public static final String USERS_ID_ALTCOLNAME =
             users.getDBTableName() +
             "_" +
             users_id.getDBColumnName()
             ;
+    // Fully qualified user name
     public static final String USERS_NAME_FULLCOLNAME =
             users_name.getFullyQualifiedDBColumnName();
+    // Full qualified user info
     public static final String USERS_INFO_FULLCOLNAME =
             users_info.getFullyQualifiedDBColumnName();
 
@@ -190,19 +233,19 @@ class ShowCaseDBInfo {
                     property_id.getDBColumnName()
             ;
     // Alternative property_id column name
-    //  For cases where fully qualified name cannot be used
-    //  e.g. Cursor adpaters
     public static final String PROPERTY_ID_ALTCOLNAME =
             property.getDBTableName() +
                     "_" +
                     property_id.getDBColumnName();
+    // Full qualified property descr
     public static final String PROPERTY_DESCR_FULLCOLNAME =
             property_descr.getFullyQualifiedDBColumnName();
-
+    // Full qualified userpropertyref userref
     public static final String USERPROPERTY_USERREF_FULLCOLNAME =
             userpropertylink.getDBTableName() +
                     SQLPERIOD +
                     userpropertylink_userref.getDBColumnName();
+    // Fully qualified userpropertyref propertyref
     public static final String USER_PROPERTY_PROPERTYREF_FULLCOLNAME =
             userpropertylink.getDBTableName() +
                     SQLPERIOD +
