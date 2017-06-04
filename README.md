@@ -179,17 +179,17 @@ Now the code within an Activity or a Method within an Activity that is called:-
         );
 
         // Check for usability of baseschema
-                if (baseschema.isDBDatabaseUsable()) {
-                    // Build the Database Structures for the two databases
-                    baseschema.actionDBBuildSQL(db);
-                    baseschema.actionDBBuildSQL(db2);
+        if (baseschema.isDBDatabaseUsable()) {
+            // Build the Database Structures for the two databases
+            baseschema.actionDBBuildSQL(db);
+            baseschema.actionDBBuildSQL(db2);
 
-                    // Now Alter the database to apply any changes, if any
-                    baseschema.actionDBAlterSQL(db);
-                    baseschema.actionDBAlterSQL(db2);
-                    // Typically Build followed by Alter would be run at the
-                    // start of the application, thus creating the database if
-                    // it doesn't exist and then altering it if any changes
-                    // have been made (e.g. adding a new DBColumn to a table).
-                }
+            // Now Alter the database to apply any changes, if any
+            baseschema.actionDBAlterSQL(db);
+            baseschema.actionDBAlterSQL(db2);
+            // Typically Build followed by Alter would be run at the
+            // start of the application, thus creating the database if
+            // it doesn't exist and then altering it if any changes
+            // have been made (e.g. adding a new DBColumn to a table).
+        }
     }
