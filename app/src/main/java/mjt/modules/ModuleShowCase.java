@@ -8,8 +8,11 @@ import android.os.Bundle;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
+import mjt.dbcolumn.DBColumn;
 import mjt.dbdatabase.DBDatabase;
+import mjt.dbtable.DBTable;
 import mjt.emsg.Emsg;
 import static mjt.sqlwords.SQLKWORD.*;
 
@@ -31,6 +34,7 @@ public class ModuleShowCase extends AppCompatActivity {
         // defining SQlite databases and subsequently altering
         // them. see ShowCaseDBCLasses method below
         ShowCaseDBClasses();
+        ExampleDB();
     }
     @SuppressWarnings("EmptyMethod")
     @Override
@@ -260,5 +264,89 @@ public class ModuleShowCase extends AppCompatActivity {
             rv = true;
         }
         return rv;
+    }
+
+    private void ExampleDB() {
+        String DBNAME = "mydatabase"; // Database name
+        int DBVERSION = 1;            // Database version
+
+        // Table and column names for the user table.
+        String DBUSERTABLE = "users";
+        String DBUSERNAMECOL = "name";
+        String DBUSERDESCCOL = "descr";
+
+        // The DBColumn objects for the user table.
+        // First column is how you can easily create a standard _id column
+        // i.e. _id INTEGER PRIMARY INDEX (note true or false will work, just has to be boolean)
+        DBColumn userid = new DBColumn(true);             // Construct standard _id column
+
+        // 2nd and 3rd columns are columnname TEXT
+        //    3rd paramter false = not a primary index)
+        //    4th paramter is for the default value, empty string = no default
+        DBColumn username = new DBColumn(DBUSERNAMECOL,"TEXT",false,"");
+        DBColumn userdesc = new DBColumn(DBUSERDESCCOL,"TEXT",false,"");
+
+        // Prepare an ArrayList of the columns for use by the DBTable
+        ArrayList<DBColumn> userscolumns = new ArrayList<>(
+                Arrays.asList(userid,username,userdesc)
+                );
+
+        // Table and column names for the property table.
+        String DBPROPTABLE = "proprties";
+        String DBPROPINFOCOL = "info";
+
+        DBColumn propertyid = new DBColumn(false);
+        DBColumn propertyinfo = new DBColumn(DBPROPINFOCOL,"TEXT",false,"");
+
+        // Prepare an ArrayList of the columns for use by the DBTable
+        ArrayList<DBColumn> propertiescolumns = new ArrayList<>();
+        propertiescolumns.add(propertyid);
+        propertiescolumns.add(propertyinfo);
+
+        // The DBTable objects
+        DBTable usertable = new DBTable(DBUSERTABLE,userscolumns);
+        // Note without an ArrayList of DBColumns
+        DBTable propertytable = new DBTable(
+                DBPROPTABLE,
+                new ArrayList<>(
+                        Arrays.asList(
+                                propertyid,
+                                propertyinfo
+                        )
+                )
+        );
+        // Prepare an ArrayList of the tables
+        ArrayList<DBTable> tables = new ArrayList<>(
+                Arrays.asList(
+                        usertable,
+                        propertytable
+                )
+        );
+
+        //Finally construct the DBDatabase Object
+        DBDatabase baseschema = new DBDatabase(DBNAME,tables);
+
+        //To use the baseschema to create the tables an SQLite database
+        // will be required
+        ShowCaseDBHelper dbhelper = new ShowCaseDBHelper(this,DBNAME,null,DBVERSION);
+        SQLiteDatabase db = dbhelper.getWritableDatabase();
+
+        // Alternative method of getting an SQLite Database not using a helper
+        SQLiteDatabase db2 =  openOrCreateDatabase(
+                "anotherdatabase",
+                SQLiteDatabase.CREATE_IF_NECESSARY,
+                null
+        );
+
+        // Check for usability of baseschema
+                if (baseschema.isDBDatabaseUsable()) {
+                    // Build the Database Structures for both databases
+                    baseschema.actionDBBuildSQL(db);
+                    baseschema.actionDBBuildSQL(db2);
+
+                    // Now Alter the database to apply any changes
+                    baseschema.actionDBAlterSQL(db);
+                    baseschema.actionDBAlterSQL(db2);
+                }
     }
 }

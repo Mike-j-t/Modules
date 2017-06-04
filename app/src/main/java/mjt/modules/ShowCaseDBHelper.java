@@ -8,28 +8,19 @@ import android.database.sqlite.SQLiteOpenHelper;
  * Minimal DBHelper i.e. doesn't create tables
  */
 
-@SuppressWarnings({"WeakerAccess", "UnusedParameters"})
+@SuppressWarnings({"WeakerAccess", "UnusedParameters", "SameParametervalue"})
 public class ShowCaseDBHelper extends SQLiteOpenHelper {
 
-    ShowCaseDBHelper(Context context, @SuppressWarnings("SameParameterValue") String databasename, @SuppressWarnings("SameParameterValue") SQLiteDatabase.CursorFactory factory, @SuppressWarnings("SameParameterValue") int version) {
+    ShowCaseDBHelper(Context context,
+                     String databasename,
+                     SQLiteDatabase.CursorFactory factory,
+                     int version) {
         super(context, databasename, factory, version);
-
     }
-
     public void onCreate(SQLiteDatabase db) {
-        expandDB(db, false);
     }
-
-    public void onUpgrade(SQLiteDatabase db, int oldeversion, int newversion) {
-
+    public void onUpgrade(SQLiteDatabase db,
+                          int oldeversion,
+                          int newversion) {
     }
-
-    @SuppressWarnings("EmptyMethod")
-    /*
-      This could be where the table creation modifcation takes place
-     */
-    void expandDB(SQLiteDatabase db, @SuppressWarnings("SameParameterValue") boolean buildandexpand) {
-
-    }
-
 }
