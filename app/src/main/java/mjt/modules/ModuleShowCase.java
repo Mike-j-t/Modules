@@ -12,6 +12,7 @@ import java.util.Arrays;
 
 import mjt.dbcolumn.DBColumn;
 import mjt.dbdatabase.DBDatabase;
+import mjt.dbindex.DBIndex;
 import mjt.dbtable.DBTable;
 import mjt.emsg.Emsg;
 import static mjt.sqlwords.SQLKWORD.*;
@@ -29,7 +30,7 @@ public class ModuleShowCase extends AppCompatActivity {
 
         // Example Use of Emsg an Extended message handling class
         // see ShowCase method below
-        ShowCaseEmsg();
+        //ShowCaseEmsg();
         // Example use of DBColumn, DBTable and DBDatabase for
         // defining SQlite databases and subsequently altering
         // them. see ShowCaseDBCLasses method below
@@ -266,8 +267,11 @@ public class ModuleShowCase extends AppCompatActivity {
         return rv;
     }
 
+    /**
+     * Example Usage of the DB family of objects
+     */
     private void ExampleDB() {
-        String DBNAME = "mydatabase"; // Database name
+        String DBNAME = "myexampledatabase"; // Database name
         int DBVERSION = 1;            // Database version
 
         // Table and column names for the user table.
@@ -306,7 +310,7 @@ public class ModuleShowCase extends AppCompatActivity {
         // The DBTable objects
         DBTable usertable = new DBTable(DBUSERTABLE,userscolumns);
         // Note without an ArrayList of DBColumns
-        DBTable propertytable = new DBTable(
+        DBTable propertiestable = new DBTable(
                 DBPROPTABLE,
                 new ArrayList<>(
                         Arrays.asList(
@@ -319,34 +323,90 @@ public class ModuleShowCase extends AppCompatActivity {
         ArrayList<DBTable> tables = new ArrayList<>(
                 Arrays.asList(
                         usertable,
-                        propertytable
+                        propertiestable
                 )
         );
 
-        //Finally construct the DBDatabase Object
-        DBDatabase baseschema = new DBDatabase(DBNAME,tables);
+        // Define some Indexes
+        // Index for the properties table on the info column sorted in
+        // dsecending order.
+        DBIndex propertiesinfo = new DBIndex("propertiesinfoindex",
+                propertiestable,
+                propertyinfo,
+                false,
+                false
+        );
+        // Index for the users table with name and desc columns sorted in
+        // ascending and descending order respectively.
+        ArrayList<DBColumn> usernamedesccolumns = new ArrayList<>(Arrays.asList(
+                username,userdesc
+        ));
+        ArrayList<Boolean> usernamedescsort = new ArrayList<>(Arrays.asList(
+                true,false
+        ));
+        DBIndex usernamedescindex = new DBIndex("usernamedescindex",
+                usertable,
+                usernamedesccolumns,
+                usernamedescsort,
+                false
+                );
 
-        //To use the baseschema to create the tables an SQLite database
-        // will be required
+        // 3rd Index for the users table with dsec and name columns sorted
+        // in ascending and descending order respectively and where the
+        // index is to be unique.
+        DBIndex usersdescnameindex = new DBIndex("userdescnameindex",
+                usertable,
+                new ArrayList<>(
+                        Arrays.asList(
+                                userdesc,
+                                username
+                        )
+                ),
+                new ArrayList<>(
+                        Arrays.asList(
+                                true,
+                                false
+                        )
+                ),
+                true
+        );
+
+        // Prepare a list of the indexes for inclusion in the DBDatabase
+        ArrayList<DBIndex> indexes = new ArrayList<>(
+                Arrays.asList(
+                        propertiesinfo,
+                        usernamedescindex,
+                        usersdescnameindex
+                ));
+
+        //Finally construct the DBDatabase Object
+        DBDatabase baseschema = new DBDatabase(DBNAME,tables,indexes);
+
+        //To use the baseschema to create the tables, an SQLite database
+        // will be required.
         ShowCaseDBHelper dbhelper = new ShowCaseDBHelper(this,DBNAME,null,DBVERSION);
         SQLiteDatabase db = dbhelper.getWritableDatabase();
 
         // Alternative method of getting an SQLite Database not using a helper
         SQLiteDatabase db2 =  openOrCreateDatabase(
-                "anotherdatabase",
+                "anotherexampledatabase",
                 SQLiteDatabase.CREATE_IF_NECESSARY,
                 null
         );
 
         // Check for usability of baseschema
-                if (baseschema.isDBDatabaseUsable()) {
-                    // Build the Database Structures for both databases
-                    baseschema.actionDBBuildSQL(db);
-                    baseschema.actionDBBuildSQL(db2);
+        if (baseschema.isDBDatabaseUsable()) {
+            // Build the Database Structures for the two databases
+            baseschema.actionDBBuildSQL(db);
+            baseschema.actionDBBuildSQL(db2);
 
-                    // Now Alter the database to apply any changes
-                    baseschema.actionDBAlterSQL(db);
-                    baseschema.actionDBAlterSQL(db2);
-                }
+            // Now Alter the database to apply any changes, if any
+            baseschema.actionDBAlterSQL(db);
+            baseschema.actionDBAlterSQL(db2);
+            // Typically Build followed by Alter would be run at the
+            // start of the application, thus creating the database if
+            // it doesn't exist and then altering it if any changes
+            // have been made (e.g. adding a new DBColumn to a table).
+        }
     }
 }
