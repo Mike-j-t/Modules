@@ -95,7 +95,7 @@ public class DBIndex {
     private String indexcreateSQL;
     private String problem_msg;
     private Boolean unique;
-    private static String callmodeprefix = "Constructed using";
+    private static final String callmodeprefix = "Constructed using";
 
     /**************************************************************************
      * Constructs a DBIndex from Multiple Columns and Multiple Indexes.

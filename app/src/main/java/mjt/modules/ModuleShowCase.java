@@ -15,6 +15,7 @@ import mjt.dbdatabase.DBDatabase;
 import mjt.dbindex.DBIndex;
 import mjt.dbtable.DBTable;
 import mjt.emsg.Emsg;
+import mjt.displayhelp.DisplayHelp;
 import static mjt.sqlwords.SQLKWORD.*;
 
 
@@ -36,11 +37,21 @@ public class ModuleShowCase extends AppCompatActivity {
         // them. see ShowCaseDBCLasses method below
         ShowCaseDBClasses();
         ExampleDB();
+        ShowCaseDisplayHelp();
     }
     @SuppressWarnings("EmptyMethod")
     @Override
     protected void onDestroy() {
         super.onDestroy();
+    }
+
+    private void ShowCaseDisplayHelp() {
+
+        ArrayList<String> altlist = DisplayHelp.convertResourceToArrayList(this,R.array.xxhelp_shoporder_field);
+        DisplayHelp dh = new DisplayHelp(this,"my Title",altlist,80,false,0xffff0000, 0xbbffffff, 20f, 16f, 12);
+
+        //new DisplayHelp(this,"ALt Title",R.array.help_main_activity,80,true,0xffff0000, 0xbbffffff,20f,16f,12);
+
     }
 
     /**************************************************************************

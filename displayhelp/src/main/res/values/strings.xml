@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE resources [
+    <!ENTITY app_name "displayHelp">
+    <!ENTITY heading "~HDG~">
+    <!ENTITY tab1 "~TAB1~">
+    <!ENTITY tab2 "~TAB2~">
+    <!ENTITY cmnt "~CMMT~">
+    ]>
+<resources>
+    <string name="app_name">&app_name;</string>
+
+    <!--
+        Indicators are used programtically, they are retrieved and then used
+         to check for the occurrence of the respective item.
+    -->
+    <string name="heading_indicator">&heading;</string>
+    <string name="tab1_indicator">&tab1;</string>
+    <string name="tab2_indicator">&tab2;</string>
+</resources>

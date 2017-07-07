@@ -1,3 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE resources [
+    <!ENTITY app_name "displayHelp">
+    <!ENTITY heading "~HDG~">
+    <!ENTITY tab1 "~TAB1~">
+    <!ENTITY tab2 "~TAB2~">
+    <!ENTITY cmnt "~CMMT~">
+    ]>
 <resources>
     <string name="app_name">Modules</string>
+    <!--
+       Indicators are used programtically, they are retrieved and then used
+        to check for the occurrence of the respective item.
+   -->
+    <string name="heading_indicator">&heading;</string>
+    <string name="tab1_indicator">&tab1;</string>
+    <string name="tab2_indicator">&tab2;</string>
+    <string name="xxxx">Test</string>
+    <string-array name="xxhelp_shoporder_field">
+        <item>&heading;<![CDATA[Shop Order Field]]></item>
+        <item>""</item>
+        <item><![CDATA[The <b>Shop Order</b> is used to specify the <b>Order</b> in which <b>Shops</b> are listed in the <b>Shoppong List</b>.]]></item>
+        <item><![CDATA[<b>Shops</b> with lower <b>Orders</b> appear higher in the <b>Shopping List</b>]]></item>
+        <item>""</item>
+        <item><![CDATA[The <b>Shop City</b> can be up to 24 characters in length.]]></item>
+        <item><![CDATA[The <b>Order</b> is a whole number between 1 and 9999.]]></item>
+        <item><![CDATA[<b>ShopWise</b> will suggest a number when adding a Shop and will 100 greater than the highest <b>Order</b>
+            (unless the highest number is getting close to the 9999 when it will try to pick a number 10 greater than the highest <b>Order</b>.
+            ]]></item>
+    </string-array>
+
+    <string-array name="help_main_activity">
+        <item>&heading;Main Menu - Help</item>
+        <item>""</item>
+        <item><![CDATA[The <b>Main Menu</b> displays a list of Buttons which can be clicked to take you to the respective option.]]></item>
+        <item>""</item>
+
+        <item><![CDATA[The Buttons are dependent upon the data that has been added to the Database.]]></item>
+        <item>""</item>
+
+        <item><![CDATA[Initially <b>ShopWise</b> has no data and only the <b>SHOPS</b>, <b>STORAGE</b> and <b>TOOLS</b> buttons are listed.]]></item>
+        <item>&tab1;<![CDATA[<b><u>SHOPS</u></b> is for managing Shops; you can Add, Edit and Delete Shops.]]></item>
+        <item>&tab1;<![CDATA[<b><u>STORAGE</u></b> is for managing Storage Locations. (<i>i.e. where you keep/store items e.g. Pantry</i>).]]></item>
+        <item>&tab1;<![CDATA[<b><u>TOOLS</U></b> take you to an additional Menu of less frequently used options:-]]></item>
+        <item>&tab2;<![CDATA[<b><u>BACKUP</u></b> for backing up and restoring <b>ShopWise</b>\'s data.]]></item>
+        <item>&tab2;<![CDATA[<b><u>RULES</u></b> for creating new rules and amending existing rules base upon historical data.]]></item>
+        <item>""</item>
+
+        <item><![CDATA[When at least 1 or more <b>Shops</b> exist, the <b>Aisles</b> button will be listed.]]></item>
+        <item>&tab1;<![CDATA[<b><u>AISLES</u></b> is for managing Aisles; you can Add, Edit and Delete Aisles.]]></item>
+        <item>&tab1;<![CDATA[<i>An <b>Aisle</b> represents a location in a <b>Shop</b>, it need not be an Aisle, it could be an area, such as Bakery.</i>)]]></item>
+        <item>""</item>
+
+        <item><![CDATA[When at least 1 or more <b>Storage Locations</b> exist, the <b>PRODUCTS</b> button will be listed.]]></item>
+        <item>&tab1;<![CDATA[<b><u>PRODUCTS</u></b>, is for managing <b>Products</b>; you can Add, Edit and Delete <b>Products</b>.]]></item>
+        <item>&tab1;<![CDATA[A <b>Product</b>, is an item that you buy.]]></item>
+        <item>""</item>
+
+        <item><![CDATA[When at least 1 <b>Aisle</b> (<i>and therefore Shop</i>)
+            and at least 1 <b>Product</b> (<i>and therefore a Storage Location</i>) exist,
+            the <b><u>STOCK</u></b> button will be listed.]]></item>
+        <item>&tab1;<![CDATA[<b>STOCK</b> allows you to Add, Edit or Delete Stock.]]></item>
+        <item>""</item>
+        <item>&tab2;<![CDATA[<b>Stock</b> is a <b>Product</b> in an <b>Aisle</b>, within a <b>Shop</b>.]]></item>
+        <item>&tab2;<![CDATA[An analogy is the difference between saying <i>\"get a can of baked beans\"></i>
+                    and saying <i>\"get a can of baked beans <u>from the corner shop</u>\"</i>. The latter is more specific. ]]></item>
+        <item>&tab2;<![CDATA[
+                    <b>ShopWise</b> doesn\'t allow you to use the former,
+                    rather <b>ShopWise</b> relies upon <b>Products</b> that have a location (Shop and Aisle) for the <b>Shopping List</b>.
+                    Hence the term <b>Stock</b>.]]></item>
+
+        <item>&tab2;<![CDATA[A single <b>Product</b> can be the basis of multiple stocked items.]]></item>
+        <item>&tab2;<![CDATA[e.g. <i>Baked Beans</i> could be stocked(<b>Stock</b>) in an <b>Aisle</b> of the <b>Shop</b> <i>Corner Shop</i>
+                    as well as in  an <b>Aisle</b> of the <b>Shop</b> <i>SuperStore</i>.]]></item>
+        <item>&tab2;<![CDATA[<b>Stock</b>, when assigned also has additional attributes, such as Price, that are specific to that stocked product.]]></item>
+        <item>&tab2;<![CDATA[<i>You can also invoke the <b>STOCK</b> option from within the <b>SHOPS</b>, <b>AISLES</b> and <b>PRODUCTS</b> options
+                    (The help associated with the options covers this).</i>]]></item>
+        <item>""</item>
+
+        <item><![CDATA[When at least 1 <b>Stock</b> exists then options, <b>Order</b>, <b>CheckList</b>, <<b>Shopping</b> and <b>Rules</b> are listed
+            (<i>i.e. All Buttons are now Listed</i>).]]></item>
+
+        <item>&tab1;<![CDATA[<b><u>ORDER</u></b> is for Adding items to the Shopping List in an Ad-Hoc way, according to Stock and thus Product,
+        it compliments <b><u>CHECKLIST</u></b>]]></item>
+        <item>&tab1;<![CDATA[<b><u>CHECKLIST</u></b> is for Adding items to the Shopping List in an orderly way by checking the Storage Locations.]]></item>
+        <item>&tab1;<![CDATA[<b><u>SHOPPING</u></b> is for doing the Shopping, it is the Shopping List.]]></item>
+        <item>&tab1;<![CDATA[<b>RULES</b> is for managing rules that will automatically add to the Shopping List.]]></item>
+        <item>""</item>
+    </string-array>
 </resources>

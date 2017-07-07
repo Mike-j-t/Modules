@@ -280,6 +280,7 @@ public class DBTable {
      * @return The usability status, as a boolean, true indicates that
      * the DBTable is usable, false that it is not.
      */
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public boolean isDBTableUsable() { return this.usable; }
 
     /**************************************************************************
