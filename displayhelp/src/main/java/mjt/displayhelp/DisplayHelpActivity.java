@@ -12,13 +12,13 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import static mjt.displayhelp.DisplayHelp.*;
 
 
 /**
- * Created by Mike on 4/07/2017.
+ * DisplayHelpActivity, used for display help as a dialog,
+ * invoked via a DisplayHelp instance.
  */
 
 public class DisplayHelpActivity extends Activity {
@@ -78,6 +78,7 @@ public class DisplayHelpActivity extends Activity {
      * @param v The View (Button) that was clicked
      */
     public void doneButton(View v) {
+        ((LinearLayout)v.getParent()).setBackgroundColor(Color.argb(250,0,0,0));
         this.finish();
     }
     /**
