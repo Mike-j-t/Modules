@@ -21,6 +21,17 @@ public class SQLKWORD {
     public static final String SQLADDCOLUMN = " ADD COLUMN ";
     public static final String SQLPRIMARYINDEX = " PRIMARY " + SQLINDEX;
 
+    public static final String SQLPRAGMA = "PRAGMA ";
+        public static final String SQLTABLEINFO_START = SQLPRAGMA + " TABLE_INFO (";
+            public static final String SQLTABLEINFO_END = ") ";
+            public static final String SQLTABLEINFO_IDCOL = "cid";
+            public static final String SQLTABLEINFO_COLNAME_COL = "name";
+            public static final String SQLTABLEINFO_COLTYPE_COL = "type";
+            public static final String SQLTABLEINFO_COLNOTNULL_COL = "notnull";
+            public static final String SQLTABLEINFO_COLDFLTVAL_COL = "dflt_value";
+            public static final String SQLTABLEINFO_COLPRIMARYKEY_COL = "pk";
+
+
     // Core SQLite Types
     public static final String SQLINTEGER = "INTEGER";
     public static final String SQLSTDIDTYPE = SQLINTEGER + SQLPRIMARYKEY;
@@ -62,7 +73,7 @@ public class SQLKWORD {
     public static final String SQLSUMCLOSE = ") ";
 
     public static final String SQLMAX = "MAX(";
-    public static final String SQLMAXCLOSE = ") ";
+    public static final String SQLMAXCLOSE = SQLSUMCLOSE;
 
     public static final String SQLSELECTALLFROM = SQLSELECT + "*" + SQLFROM;
     public static final String SQLSELECTDISTINCTALLFROM =
