@@ -16,6 +16,7 @@
     <string name="heading_indicator">&heading;</string>
     <string name="tab1_indicator">&tab1;</string>
     <string name="tab2_indicator">&tab2;</string>
+    <string name="questionmark"><![CDATA[\?]]></string>
 
     <string name="donebuttontext">DONE</string>
 </resources>

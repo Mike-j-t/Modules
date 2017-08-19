@@ -1,5 +1,6 @@
 package mjt.displayhelp;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
@@ -55,6 +56,7 @@ public class AdapterDisplayHelpListView extends BaseAdapter {
     public long getItemId(int position) {
         return position;
     }
+    @SuppressLint("InflateParams")
     public View getView(int position, View convertview, ViewGroup viewparent) {
         if (convertview == null) {
             LayoutInflater inflater =
