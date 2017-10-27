@@ -437,7 +437,7 @@ public class DBTable {
         for(DBColumn dc : this.table_columns) {
             part1 = part1 + dc.getDBColumnName() + " " + dc.getDBColumnType() + " ";
             // Apply the default value if required
-            if(dc.getDBColumnDefaultValue().length() > 0 ) {
+            if(dc.getDBColumnDefaultValue() != null && dc.getDBColumnDefaultValue().length() > 0) {
                 part1 = part1 +
                         SQLDEFAULT +
                         dc.getDBColumnDefaultValue() + " ";

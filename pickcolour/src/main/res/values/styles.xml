@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <style name="colour_slider">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_weight">@integer/default_slider_layout_weight</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:max">@integer/default_slider_max</item>
+        <item name="android:min" tools:ignore="NewApi">0</item>
+        <item name="android:progress">@integer/default_slider_progress</item>
+    </style>
+    <style name="colour_hexvalue">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@color/colourBlack</item>
+        <item name="android:background">@color/colourWhite</item>
+    </style>
+    <style name="colour_slider_linearlayout">
+        <item name="android:orientation">horizontal</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">0dp</item>
+        <item name="android:layout_weight">@integer/default_slider_layout_height_weight</item>
+        <item name="android:background">@color/colourWhite</item>
+    </style>
+    <style name="colour_slider_decimal_value">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_weight">@integer/default_decimal_value</item>
+        <item name="android:gravity">right|center_vertical</item>
+        <item name="android:paddingRight">@dimen/default_decimal_value_padding</item>
+    </style>
+</resources>

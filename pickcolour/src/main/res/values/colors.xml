@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colourRed">#FFFF0000</color>
+    <color name="colourGreen">#FF00FF00</color>
+    <color name="colourBlue">#FF0000FF</color>
+    <color name="colourBlack">#FF000000</color>
+    <color name="colourWhite">#FFFFFFFF</color>
+    <color name="colourGrey">#FF777777</color>
+    <color name="thumbColourRed">#AAFF0000</color>
+    <color name="thumbColourGreen">#AA00FF00</color>
+    <color name="thumbColourBlue">#AA0000FF</color>
+    <color name="thumbColourAlpha">#AAAAAAAA</color>
+</resources>

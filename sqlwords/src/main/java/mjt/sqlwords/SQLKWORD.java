@@ -72,8 +72,10 @@ public class SQLKWORD {
     public static final String SQLSUM = " SUM(";
     public static final String SQLSUMCLOSE = ") ";
 
-    public static final String SQLMAX = "MAX(";
+    public static final String SQLMAX = " MAX(";
     public static final String SQLMAXCLOSE = SQLSUMCLOSE;
+    public static final String SQLAVERAGE = " AVG(";
+    public static final String SQLAVERAGECLOSE = SQLSUMCLOSE;
 
     public static final String SQLSELECTALLFROM = SQLSELECT + "*" + SQLFROM;
     public static final String SQLSELECTDISTINCTALLFROM =

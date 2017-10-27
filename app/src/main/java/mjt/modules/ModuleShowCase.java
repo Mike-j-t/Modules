@@ -1,11 +1,18 @@
 package mjt.modules;
 
 import android.content.ContentValues;
+import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutCompat;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -16,6 +23,8 @@ import mjt.dbindex.DBIndex;
 import mjt.dbtable.DBTable;
 import mjt.emsg.Emsg;
 import mjt.displayhelp.DisplayHelp;
+import mjt.pickcolour.PickColour;
+
 import static mjt.sqlwords.SQLKWORD.*;
 
 
@@ -24,20 +33,35 @@ import static mjt.sqlwords.SQLKWORD.*;
  */
 public class ModuleShowCase extends AppCompatActivity {
 
+    LinearLayout mLinearLayout;
+    TextView mTextView;
+    Button mDoItButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_module_show_case);
+        mTextView = (TextView) findViewById(R.id.textview);
+        mLinearLayout = (LinearLayout) findViewById(R.id.linearlayout);
+        mDoItButton = (Button) findViewById(R.id.doit_button);
 
         // Example Use of Emsg an Extended message handling class
         // see ShowCase method below
-        ShowCaseEmsg();
+        //ShowCaseEmsg();
         // Example use of DBColumn, DBTable and DBDatabase for
         // defining SQlite databases and subsequently altering
         // them. see ShowCaseDBCLasses method below
-        ShowCaseDBClasses();
-        ExampleDB();
-        ShowCaseDisplayHelp();
+        //ShowCaseDBClasses();
+        //ExampleDB();
+        //ShowCaseDisplayHelp();
+        //ShowCasePickColour();
+
+        mDoItButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ShowCasePickColour();
+            }
+        });
     }
     @SuppressWarnings("EmptyMethod")
     @Override
@@ -51,6 +75,26 @@ public class ModuleShowCase extends AppCompatActivity {
         DisplayHelp dh = new DisplayHelp(this,"my Title",altlist,80,false,0xffff0000, 0xbbffffff, 20f, 16f, 12);
 
         //new DisplayHelp(this,"ALt Title",R.array.help_main_activity,80,true,0xffff0000, 0xbbffffff,20f,16f,12);
+
+    }
+
+    private void ShowCasePickColour() {
+        Intent i = new Intent(this, PickColour.class);
+        i.putExtra(PickColour.INTENTKEY_STARTCOLOUR,0xFF_70_FD_87);
+        startActivityForResult(i,10);
+
+    }
+
+    @Override
+    public void onActivityResult(int requestcode, int resultcode, Intent rv) {
+        if (requestcode == 10) {
+            if (resultcode == RESULT_OK) {
+                long returnedcolour = rv.getLongExtra(
+                        PickColour.INTENTKEY_RETURNCOLOUR,0x01_FF_FF_FF_FFL
+                );
+                mLinearLayout.setBackgroundColor((int) returnedcolour);
+            }
+        }
 
     }
 
@@ -183,7 +227,7 @@ public class ModuleShowCase extends AppCompatActivity {
         // As an example of not using an SQLiteOpenHelper
         // not really something that would normally be done
         SQLiteDatabase db2 = openOrCreateDatabase("myotherdatabase",
-                SQLiteDatabase.CREATE_IF_NECESSARY,
+                Context.MODE_PRIVATE,
                 null
         );
         // Build the 2nd Database using the same pseudo schema
@@ -258,7 +302,7 @@ public class ModuleShowCase extends AppCompatActivity {
      * Find if there are any rows, thus data, in the database
      * @param db        SQLite Database
      * @param dbschema  DBDatabase schema to find all tables
-     * @return          true if there are any rows found, esle false
+     * @return          true if there are any rows found, else false
      */
     private boolean SCAnyData(SQLiteDatabase db, @SuppressWarnings("SameParameterValue") DBDatabase dbschema) {
         boolean rv = false;
@@ -401,7 +445,7 @@ public class ModuleShowCase extends AppCompatActivity {
         // Alternative method of getting an SQLite Database not using a helper
         SQLiteDatabase db2 =  openOrCreateDatabase(
                 "anotherexampledatabase",
-                SQLiteDatabase.CREATE_IF_NECESSARY,
+                Context.MODE_PRIVATE,
                 null
         );
 
