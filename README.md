@@ -2,6 +2,9 @@
 Modules for Android
 Modules that have been written for Android development
 
+## DisplayHelp ##
+A dialog for displaying help (needs more info etc)
+
 ## Emsg ##
 An extended error message class.
 An Emsg instance has 3 members 
@@ -12,27 +15,27 @@ An Emsg instance has 3 members
 
 ## DB???? Family ##
 Modules that create a psuedo/base SQLite database scehma, ultimately creating
-the dataabse structure or altering the database structure.
+the database structure or altering the database structure.
 
 There are 4 core Classes **DBColumn**, **DBTAble**, **DBIndex**  and **DBDatabase**. 
 Additionally Class **SQLKWORD**has some more commonly used SQL KeyWords defined as constants e.g.
-SQLSELECT resolves to SELECT (with surrounding spaces)
-SQLSELECTALLFROM resolves to SELECT * FROM
+**`SQLSELECT`** resolves to ` SELECT `(with surrounding spaces)
+**`SQLSELECTALLFROM`** resolves to ` SELECT * FROM `
 The intentional use is to reduce typing errors.
 
 Typically you would use **DBColumn** to create the column onjects (once per column), 
 then you would use **DBTable** to create the table objects, passing the relevant columns, 
-you could then use DBIndex to create any additional indexes.
+you could then use **DBIndex** to create any additional indexes.
 
 You would then use **DBDatabase** to create a base/pseudo schema, this being passed the **DBTable** list
 and the **DBIndex** list.
 
-You would then typically check that the schema is usable using the **isDatabaseUsable** method.
-If the schema is usable you would then use the **actionDBBuildSQL** method to build the database and to
-cater for potential changes, thenfollow this with **actionDBAlterSQL** which would apply alterations.
+You would then typically check that the schema is usable using the **`isDatabaseUsable`** method.
+If the schema is usable you would then use the **`actionDBBuildSQL`** method to build the database and to
+cater for potential changes, follow this with **`actionDBAlterSQL`** which would apply alterations.
 Both of these actions require an SQLilte Database to be passed.
 
-The following is example code that utlisies a very basic SQLiteOpenhelper (as is used) :-
+The following is example code that utlisies a very basic **SQLiteOpenhelper** :-
 
 First the minimal **SQLiteOpenHelper** noting that this does nothing in either the `onCreate` or the `onUpgrade` methods.
 
