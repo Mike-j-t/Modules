@@ -560,9 +560,8 @@ public class DBDatabase {
      */
     // Obtain and the run the SQL statements to build the database
     public void actionDBBuildSQL(SQLiteDatabase db) {
-        ArrayList<String> actionsql = new ArrayList<>();
         // Gets the SQL statements
-        actionsql.addAll(generateDBBuildSQL(db));
+        ArrayList<String> actionsql = new ArrayList<>(generateDBBuildSQL(db));
         // Begin a Transaction
         db.beginTransaction();
         for(String currentsql : actionsql) {
@@ -607,8 +606,7 @@ public class DBDatabase {
      * @param db the db
      */
     public void actionDBAlterSQL(SQLiteDatabase db) {
-        ArrayList<String> actionsql = new ArrayList<>();
-        actionsql.addAll(generateDBAlterSQL(db));
+        ArrayList<String> actionsql = new ArrayList<>(generateDBAlterSQL(db));
         db.beginTransaction();
         for(String currentsql : actionsql) {
             db.execSQL(currentsql);

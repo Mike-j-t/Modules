@@ -94,6 +94,4 @@ public class SQLKWORD {
     public static final String SQLITEMASTERNAME_METADATA = "android_metadata";
     public static final String SQLITEMASTERNAMEPREFIX_AUTOINDEX =
             "sqlite_autoindex";
-
-
 }

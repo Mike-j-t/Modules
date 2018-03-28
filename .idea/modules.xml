@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/Modules.iml" filepath="$PROJECT_DIR$/Modules.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/dbcolumn/dbcolumn.iml" filepath="$PROJECT_DIR$/dbcolumn/dbcolumn.iml" />
+      <module fileurl="file://$PROJECT_DIR$/dbdatabase/dbdatabase.iml" filepath="$PROJECT_DIR$/dbdatabase/dbdatabase.iml" />
+      <module fileurl="file://$PROJECT_DIR$/dbindex/dbindex.iml" filepath="$PROJECT_DIR$/dbindex/dbindex.iml" />
+      <module fileurl="file://$PROJECT_DIR$/dbtable/dbtable.iml" filepath="$PROJECT_DIR$/dbtable/dbtable.iml" />
+      <module fileurl="file://$PROJECT_DIR$/displayhelp/displayhelp.iml" filepath="$PROJECT_DIR$/displayhelp/displayhelp.iml" />
+      <module fileurl="file://$PROJECT_DIR$/emsg/emsg.iml" filepath="$PROJECT_DIR$/emsg/emsg.iml" />
+      <module fileurl="file://$PROJECT_DIR$/pickcolour/pickcolour.iml" filepath="$PROJECT_DIR$/pickcolour/pickcolour.iml" />
+      <module fileurl="file://$PROJECT_DIR$/sqlwords/sqlwords.iml" filepath="$PROJECT_DIR$/sqlwords/sqlwords.iml" />
+    </modules>
+  </component>
+</project>
