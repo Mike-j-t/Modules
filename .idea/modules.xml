@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Modules.iml" filepath="$PROJECT_DIR$/Modules.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/commonsqliteutilities/commonsqliteutilities.iml" filepath="$PROJECT_DIR$/commonsqliteutilities/commonsqliteutilities.iml" />
       <module fileurl="file://$PROJECT_DIR$/dbcolumn/dbcolumn.iml" filepath="$PROJECT_DIR$/dbcolumn/dbcolumn.iml" />
       <module fileurl="file://$PROJECT_DIR$/dbdatabase/dbdatabase.iml" filepath="$PROJECT_DIR$/dbdatabase/dbdatabase.iml" />
       <module fileurl="file://$PROJECT_DIR$/dbindex/dbindex.iml" filepath="$PROJECT_DIR$/dbindex/dbindex.iml" />

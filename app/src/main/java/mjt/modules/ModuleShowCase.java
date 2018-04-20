@@ -16,6 +16,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import mjt.commonsqliteutilities.CommonSQLiteUtilities;
 import mjt.dbcolumn.DBColumn;
 import mjt.dbdatabase.DBDatabase;
 import mjt.dbindex.DBIndex;
@@ -51,7 +52,7 @@ public class ModuleShowCase extends AppCompatActivity {
         // defining SQlite databases and subsequently altering
         // them. see ShowCaseDBCLasses method below
         //ShowCaseDBClasses();
-        //ExampleDB();
+        ExampleDB();
         //ShowCaseDisplayHelp();
         //ShowCasePickColour();
 
@@ -462,5 +463,7 @@ public class ModuleShowCase extends AppCompatActivity {
             // it doesn't exist and then altering it if any changes
             // have been made (e.g. adding a new DBColumn to a table).
         }
+        CommonSQLiteUtilities.logDatabaseInfo(db);
+        CommonSQLiteUtilities.logDatabaseInfo(db2);
     }
 }

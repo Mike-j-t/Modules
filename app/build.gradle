@@ -4,7 +4,7 @@ android {
     compileSdkVersion 26
     defaultConfig {
         applicationId "mjt.modules"
-        minSdkVersion 14
+        minSdkVersion 16
         targetSdkVersion 26
         versionCode 1
         versionName "1.0"
@@ -39,4 +39,5 @@ dependencies {
     implementation project(':dbindex')
     implementation project(':dbtable')
     implementation project(':sqlwords')
+    implementation project(':commonsqliteutilities')
 }
