@@ -13,6 +13,13 @@ An Emsg instance has 3 members
 - errornumber (Integer intended so that error's can be uniquely identified)
 - errormessage (String the error message)
 
+## CommonSQLiteUtilities
+Some utilities for inspecting SQLite Databases :-
+- LogDatabaseInfo writes database information Pragmas, tables, indexes, foreign Keys to the Log.
+- LogCursorColumns write the columns in a Cursor to the Log.
+- LogCursorData write all data from the Cursor to the log using the main Cursor get???? methods.
+- getAllRowsFromTable returns a Cursor with all columns for all rows.
+
 ## DB???? Family ##
 Modules that create a psuedo/base SQLite database scehma, ultimately creating
 the database structure or altering the database structure.
